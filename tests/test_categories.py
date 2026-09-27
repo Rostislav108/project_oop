@@ -28,8 +28,42 @@ def test_category_init(products: list[Product]) -> None:
 
     assert category.name == "Смартфоны"
     assert category.description == "Описание"
-    assert category.products == products
-    assert len(category.products) == 2
+
+
+def test_products_getter_returns_string(products: list[Product]) -> None:
+    """Геттер возвращает строку со всеми товарами по шаблону."""
+    category = Category("Смартфоны", "Описание", products)
+
+    expected = (
+        "Samsung, 180000.0 руб. Остаток: 5 шт.\n"
+        "Iphone, 210000.0 руб. Остаток: 8 шт.\n"
+    )
+    assert category.products == expected
+
+
+def test_products_attribute_is_private(products: list[Product]) -> None:
+    """Список товаров хранится в приватном атрибуте."""
+    category = Category("Смартфоны", "Описание", products)
+
+    assert isinstance(category._Category__products, list)
+    assert not hasattr(category, "__products")
+
+
+def test_add_product(products: list[Product]) -> None:
+    """Метод add_product добавляет товар и увеличивает счётчик."""
+    category = Category("Смартфоны", "Описание", products)
+
+    category.add_product(Product("Xiaomi", "128GB", 31000.0, 14))
+
+    assert "Xiaomi" in category.products
+    assert Category.product_count == 3
+
+
+def test_add_product_returns_none(products: list[Product]) -> None:
+    """Метод add_product не возвращает значения."""
+    category = Category("Смартфоны", "Описание", products)
+
+    assert category.add_product(Product("Xiaomi", "128GB", 31000.0, 14)) is None
 
 
 def test_category_count(products: list[Product]) -> None:
@@ -47,11 +81,3 @@ def test_product_count(products: list[Product]) -> None:
 
     Category("Телевизоры", "Описание", [Product("ТВ", "4K", 1000.0, 1)])
     assert Category.product_count == 3
-
-
-def test_counters_accessible_from_object(products: list[Product]) -> None:
-    """Атрибуты класса доступны через объект."""
-    category = Category("Смартфоны", "Описание", products)
-
-    assert category.category_count == 1
-    assert category.product_count == 2

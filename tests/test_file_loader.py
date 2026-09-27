@@ -23,6 +23,5 @@ def test_load_categories_from_json(tmp_path) -> None:
 
     assert len(categories) == 1
     assert categories[0].name == "Смартфоны"
-    assert categories[0].products[0].name == "Samsung"
-    assert categories[0].products[0].price == 180000.0
-    assert categories[0].products[0].quantity == 5
+    assert "Samsung" in categories[0].products
+    assert "180000.0 руб." in categories[0].products

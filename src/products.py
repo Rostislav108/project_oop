@@ -1,5 +1,7 @@
 """Модуль с классом Product."""
 
+from typing import Any
+
 
 class Product:
     """Товар интернет-магазина.
@@ -7,7 +9,6 @@ class Product:
     Attributes:
         name: название товара.
         description: описание товара.
-        price: цена товара (может быть с копейками).
         quantity: количество товара в наличии (в штуках).
     """
 
@@ -24,5 +25,40 @@ class Product:
         """
         self.name = name
         self.description = description
-        self.price = price
+        self.__price = price
         self.quantity = quantity
+
+    @classmethod
+    def new_product(cls, product_data: dict[str, Any]) -> "Product":
+        """Создаёт товар из словаря с его параметрами.
+
+        Args:
+            product_data: словарь с ключами name, description,
+                price и quantity.
+
+        Returns:
+            Новый объект класса Product.
+        """
+        return cls(
+            name=product_data["name"],
+            description=product_data["description"],
+            price=product_data["price"],
+            quantity=product_data["quantity"],
+        )
+
+    @property
+    def price(self) -> float:
+        """Возвращает цену товара."""
+        return self.__price
+
+    @price.setter
+    def price(self, new_price: float) -> None:
+        """Устанавливает новую цену, если она положительная.
+
+        Args:
+            new_price: новое значение цены.
+        """
+        if new_price <= 0:
+            print("Цена не должна быть нулевая или отрицательная")
+            return
+        self.__price = new_price

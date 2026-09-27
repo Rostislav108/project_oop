@@ -26,7 +26,29 @@ class Category:
         """
         self.name = name
         self.description = description
-        self.products = products
+        self.__products = products
 
         Category.category_count += 1
         Category.product_count += len(products)
+
+    def add_product(self, product: Product) -> None:
+        """Добавляет товар в приватный список товаров категории.
+
+        Args:
+            product: объект класса Product для добавления.
+        """
+        self.__products.append(product)
+        Category.product_count += 1
+
+    @property
+    def products(self) -> str:
+        """Возвращает строку со всеми товарами категории.
+
+        Returns:
+            Строка, в которой каждый товар записан по шаблону
+            «Название продукта, X руб. Остаток: X шт.».
+        """
+        return "".join(
+            f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
+            for product in self.__products
+        )

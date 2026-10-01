@@ -61,3 +61,18 @@ def test_new_product() -> None:
     assert product.description == "512GB"
     assert product.price == 210000.0
     assert product.quantity == 8
+
+
+def test_product_str() -> None:
+    """Строковое представление товара."""
+    product = Product("Samsung", "256GB", 80.0, 15)
+
+    assert str(product) == "Samsung, 80.0 руб. Остаток: 15 шт."
+
+
+def test_product_add() -> None:
+    """Сложение возвращает полную стоимость товаров на складе."""
+    first = Product("Товар a", "Описание", 100.0, 10)
+    second = Product("Товар b", "Описание", 200.0, 2)
+
+    assert first + second == 1400

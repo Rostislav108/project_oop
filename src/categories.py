@@ -1,5 +1,7 @@
 """Модуль с классом Category."""
 
+from typing import cast
+
 from src.products import Product
 
 
@@ -45,10 +47,47 @@ class Category:
         """Возвращает строку со всеми товарами категории.
 
         Returns:
-            Строка, в которой каждый товар записан по шаблону
-            «Название продукта, X руб. Остаток: X шт.».
+            Строка, в которой каждый товар записан на отдельной строке.
         """
-        return "".join(
-            f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
-            for product in self.__products
+        return "".join(f"{product}\n" for product in self.__products)
+
+    def __str__(self) -> str:
+        """Возвращает строковое представление категории.
+
+        Returns:
+            Строка вида «Название категории, количество продуктов: X шт.»,
+            где количество считается как общее число товаров на складе.
+        """
+        total_quantity = sum(product.quantity for product in self.__products)
+        return f"{self.name}, количество продуктов: {total_quantity} шт."
+
+
+class CategoryIterator:
+    """Вспомогательный класс для перебора товаров категории.
+
+    Позволяет перебирать товары категории в цикле for.
+    """
+
+    def __init__(self, category: Category) -> None:
+        """Сохраняет список товаров категории для перебора.
+
+        Args:
+            category: категория, товары которой нужно перебирать.
+        """
+        self._products = cast(
+            list[Product], getattr(category, "_Category__products")
         )
+        self._index = 0
+
+    def __iter__(self) -> "CategoryIterator":
+        """Сбрасывает индекс и возвращает итератор."""
+        self._index = 0
+        return self
+
+    def __next__(self) -> Product:
+        """Возвращает очередной товар категории."""
+        if self._index >= len(self._products):
+            raise StopIteration
+        product = self._products[self._index]
+        self._index += 1
+        return product

@@ -62,3 +62,22 @@ class Product:
             print("Цена не должна быть нулевая или отрицательная")
             return
         self.__price = new_price
+
+    def __str__(self) -> str:
+        """Возвращает строковое представление товара.
+
+        Returns:
+            Строка вида «Название продукта, X руб. Остаток: X шт.».
+        """
+        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
+
+    def __add__(self, other: "Product") -> float:
+        """Возвращает полную стоимость товаров на складе.
+
+        Args:
+            other: второй товар для сложения.
+
+        Returns:
+            Сумма произведений цены на количество у двух товаров.
+        """
+        return self.price * self.quantity + other.price * other.quantity

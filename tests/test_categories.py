@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.categories import Category
+from src.categories import Category, CategoryIterator
 from src.products import Product
 
 
@@ -81,3 +81,19 @@ def test_product_count(products: list[Product]) -> None:
 
     Category("Телевизоры", "Описание", [Product("ТВ", "4K", 1000.0, 1)])
     assert Category.product_count == 3
+
+
+def test_category_str(products: list[Product]) -> None:
+    """Строковое представление категории по общему числу товаров."""
+    category = Category("Смартфоны", "Описание", products)
+
+    assert str(category) == "Смартфоны, количество продуктов: 13 шт."
+
+
+def test_category_iterator(products: list[Product]) -> None:
+    """Перебирает товары категории в цикле for."""
+    category = Category("Смартфоны", "Описание", products)
+
+    names = [product.name for product in CategoryIterator(category)]
+
+    assert names == ["Samsung", "Iphone"]

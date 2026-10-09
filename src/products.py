@@ -79,5 +79,86 @@ class Product:
 
         Returns:
             Сумма произведений цены на количество у двух товаров.
+
+        Raises:
+            TypeError: если товары относятся к разным классам.
         """
+        if type(self) is not type(other):
+            raise TypeError("Складывать можно только товары одного класса")
         return self.price * self.quantity + other.price * other.quantity
+
+
+class Smartphone(Product):
+    """Смартфон — наследник класса Product.
+
+    Attributes:
+        efficiency: производительность.
+        model: модель.
+        memory: объём встроенной памяти.
+        color: цвет.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        efficiency: float,
+        model: str,
+        memory: int,
+        color: str,
+    ) -> None:
+        """Инициализирует смартфон.
+
+        Args:
+            name: название товара.
+            description: описание товара.
+            price: цена товара.
+            quantity: количество в наличии.
+            efficiency: производительность.
+            model: модель.
+            memory: объём встроенной памяти.
+            color: цвет.
+        """
+        super().__init__(name, description, price, quantity)
+        self.efficiency = efficiency
+        self.model = model
+        self.memory = memory
+        self.color = color
+
+
+class LawnGrass(Product):
+    """Трава газонная — наследник класса Product.
+
+    Attributes:
+        country: страна-производитель.
+        germination_period: срок прорастания.
+        color: цвет.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        country: str,
+        germination_period: str,
+        color: str,
+    ) -> None:
+        """Инициализирует газонную траву.
+
+        Args:
+            name: название товара.
+            description: описание товара.
+            price: цена товара.
+            quantity: количество в наличии.
+            country: страна-производитель.
+            germination_period: срок прорастания.
+            color: цвет.
+        """
+        super().__init__(name, description, price, quantity)
+        self.country = country
+        self.germination_period = germination_period
+        self.color = color

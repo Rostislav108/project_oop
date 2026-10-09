@@ -1,6 +1,8 @@
-"""Тесты класса Product."""
+"""Тесты класса Product и его наследников."""
 
-from src.products import Product
+import pytest
+
+from src.products import LawnGrass, Product, Smartphone
 
 
 def test_product_init() -> None:
@@ -76,3 +78,49 @@ def test_product_add() -> None:
     second = Product("Товар b", "Описание", 200.0, 2)
 
     assert first + second == 1400
+
+
+def test_smartphone_init() -> None:
+    """Проверяет корректность инициализации смартфона."""
+    smartphone = Smartphone("Samsung", "Флагман", 80000.0, 5, 3.2, "S23", 256, "серый")
+
+    assert isinstance(smartphone, Product)
+    assert smartphone.name == "Samsung"
+    assert smartphone.efficiency == 3.2
+    assert smartphone.model == "S23"
+    assert smartphone.memory == 256
+    assert smartphone.color == "серый"
+
+
+def test_lawn_grass_init() -> None:
+    """Проверяет корректность инициализации газонной травы."""
+    grass = LawnGrass("Газон", "Семена", 4500.0, 20, "Россия", "10 дней", "зелёный")
+
+    assert isinstance(grass, Product)
+    assert grass.name == "Газон"
+    assert grass.country == "Россия"
+    assert grass.germination_period == "10 дней"
+    assert grass.color == "зелёный"
+
+
+def test_add_same_classes() -> None:
+    """Складываются товары одного класса."""
+    first = Smartphone("Samsung", "Флагман", 100.0, 10, 3.2, "S23", 256, "серый")
+    second = Smartphone("Apple", "Флагман", 200.0, 2, 3.5, "15", 128, "чёрный")
+
+    assert first + second == 1400
+
+
+def test_add_different_classes_raises() -> None:
+    """При сложении товаров разных классов выбрасывается TypeError."""
+    smartphone = Smartphone("Samsung", "Флагман", 100.0, 10, 3.2, "S23", 256, "серый")
+    grass = LawnGrass("Газон", "Семена", 200.0, 2, "Россия", "10 дней", "зелёный")
+
+    with pytest.raises(TypeError):
+        smartphone + grass
+
+
+def test_smartphone_is_subclass_of_product() -> None:
+    """Классы-наследники действительно наследуются от Product."""
+    assert issubclass(Smartphone, Product)
+    assert issubclass(LawnGrass, Product)

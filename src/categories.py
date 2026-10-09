@@ -37,8 +37,16 @@ class Category:
         """Добавляет товар в приватный список товаров категории.
 
         Args:
-            product: объект класса Product для добавления.
+            product: объект класса Product или его наследника.
+
+        Raises:
+            TypeError: если добавляется не Product и не его наследник.
         """
+        if not isinstance(product, Product):
+            raise TypeError(
+                "В категорию можно добавлять только объекты класса Product "
+                "или его наследников"
+            )
         self.__products.append(product)
         Category.product_count += 1
 

@@ -3,7 +3,7 @@
 import pytest
 
 from src.categories import Category, CategoryIterator
-from src.products import Product
+from src.products import Product, Smartphone
 
 
 @pytest.fixture(autouse=True)
@@ -97,3 +97,22 @@ def test_category_iterator(products: list[Product]) -> None:
     names = [product.name for product in CategoryIterator(category)]
 
     assert names == ["Samsung", "Iphone"]
+
+
+def test_add_product_accepts_subclass() -> None:
+    """Метод add_product принимает наследников класса Product."""
+    category = Category("Смартфоны", "Описание", [])
+    smartphone = Smartphone("Samsung", "Флагман", 80000.0, 5, 3.2, "S23", 256, "серый")
+
+    category.add_product(smartphone)
+
+    assert "Samsung" in category.products
+    assert Category.product_count == 1
+
+
+def test_add_product_rejects_non_product() -> None:
+    """Метод add_product отклоняет объекты, не являющиеся товаром."""
+    category = Category("Смартфоны", "Описание", [])
+
+    with pytest.raises(TypeError):
+        category.add_product("это не товар")

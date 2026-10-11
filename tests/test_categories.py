@@ -2,6 +2,7 @@
 
 import pytest
 
+from src.base import BaseNamedEntity
 from src.categories import Category, CategoryIterator
 from src.products import Product, Smartphone
 
@@ -116,3 +117,8 @@ def test_add_product_rejects_non_product() -> None:
 
     with pytest.raises(TypeError):
         category.add_product("это не товар")
+
+
+def test_category_inherits_base_named_entity() -> None:
+    """Категория наследует общий абстрактный класс BaseNamedEntity."""
+    assert issubclass(Category, BaseNamedEntity)

@@ -1,21 +1,19 @@
-"""Модуль с классом Product."""
+"""Модуль с классами товаров интернет-магазина."""
 
+from abc import ABC, abstractmethod
 from typing import Any
 
 
-class Product:
-    """Товар интернет-магазина.
+class BaseProduct(ABC):
+    """Абстрактный базовый класс продукта.
 
-    Attributes:
-        name: название товара.
-        description: описание товара.
-        quantity: количество товара в наличии (в штуках).
+    Содержит общую для всех продуктов функциональность.
     """
 
     def __init__(
         self, name: str, description: str, price: float, quantity: int
     ) -> None:
-        """Инициализирует товар.
+        """Инициализирует общие атрибуты продукта.
 
         Args:
             name: название товара.
@@ -28,27 +26,9 @@ class Product:
         self.__price = price
         self.quantity = quantity
 
-    @classmethod
-    def new_product(cls, product_data: dict[str, Any]) -> "Product":
-        """Создаёт товар из словаря с его параметрами.
-
-        Args:
-            product_data: словарь с ключами name, description,
-                price и quantity.
-
-        Returns:
-            Новый объект класса Product.
-        """
-        return cls(
-            name=product_data["name"],
-            description=product_data["description"],
-            price=product_data["price"],
-            quantity=product_data["quantity"],
-        )
-
     @property
     def price(self) -> float:
-        """Возвращает цену товара."""
+        """Возвращает цену продукта."""
         return self.__price
 
     @price.setter
@@ -63,6 +43,53 @@ class Product:
             return
         self.__price = new_price
 
+    @abstractmethod
+    def __str__(self) -> str:
+        """Возвращает строковое представление продукта."""
+
+    @abstractmethod
+    def __add__(self, other: "BaseProduct") -> float:
+        """Складывает продукты и возвращает их полную стоимость."""
+
+
+class ReprMixin:
+    """Миксин, печатающий информацию о создании объекта.
+
+    При создании объекта выводит в консоль название класса
+    и параметры, с которыми объект был создан.
+    """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        """Создаёт объект и печатает информацию о нём.
+
+        Args:
+            *args: позиционные аргументы конструктора.
+            **kwargs: именованные аргументы конструктора.
+        """
+        super().__init__(*args, **kwargs)
+        print(f"{self.__class__.__name__}{args}")
+
+
+class Product(ReprMixin, BaseProduct):
+    """Товар интернет-магазина — наследник BaseProduct."""
+
+    @classmethod
+    def new_product(cls, product_data: dict[str, Any]) -> "Product":
+        """Создаёт товар из словаря с его параметрами.
+
+        Args:
+            product_data: словарь с ключами name, description, price, quantity.
+
+        Returns:
+            Новый объект класса Product.
+        """
+        return cls(
+            name=product_data["name"],
+            description=product_data["description"],
+            price=product_data["price"],
+            quantity=product_data["quantity"],
+        )
+
     def __str__(self) -> str:
         """Возвращает строковое представление товара.
 
@@ -71,7 +98,7 @@ class Product:
         """
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
-    def __add__(self, other: "Product") -> float:
+    def __add__(self, other: "BaseProduct") -> float:
         """Возвращает полную стоимость товаров на складе.
 
         Args:

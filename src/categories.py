@@ -2,10 +2,11 @@
 
 from typing import cast
 
+from src.base import BaseNamedEntity
 from src.products import Product
 
 
-class Category:
+class Category(BaseNamedEntity):
     """Категория товаров интернет-магазина.
 
     Attributes:
@@ -26,7 +27,7 @@ class Category:
             description: описание категории.
             products: список товаров категории (объекты класса Product).
         """
-        self.name = name
+        super().__init__(name)
         self.description = description
         self.__products = products
 

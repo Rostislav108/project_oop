@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.products import LawnGrass, Product, Smartphone
+from src.products import BaseProduct, LawnGrass, Product, Smartphone
 
 
 def test_product_init() -> None:
@@ -124,3 +124,25 @@ def test_smartphone_is_subclass_of_product() -> None:
     """Классы-наследники действительно наследуются от Product."""
     assert issubclass(Smartphone, Product)
     assert issubclass(LawnGrass, Product)
+
+
+def test_base_product_is_abstract() -> None:
+    """Абстрактный класс BaseProduct нельзя создать напрямую."""
+    with pytest.raises(TypeError):
+        BaseProduct("Товар", "Описание", 100.0, 1)
+
+
+def test_product_is_subclass_of_base() -> None:
+    """Продукт и его наследники наследуются от BaseProduct."""
+    assert issubclass(Product, BaseProduct)
+    assert issubclass(Smartphone, BaseProduct)
+    assert issubclass(LawnGrass, BaseProduct)
+
+
+def test_mixin_prints_on_create(capsys) -> None:
+    """Миксин печатает класс и параметры созданного объекта."""
+    Product("Продукт1", "Описание продукта", 1200, 10)
+
+    captured = capsys.readouterr()
+
+    assert "Product('Продукт1', 'Описание продукта', 1200, 10)" in captured.out

@@ -1,6 +1,9 @@
 """Тесты класса Order."""
 
+import pytest
+
 from src.base import BaseNamedEntity
+from src.exceptions import ZeroQuantityError
 from src.orders import Order
 from src.products import Product
 
@@ -25,3 +28,12 @@ def test_order_holds_single_product() -> None:
     order = Order("Заказ №2", product, 4)
 
     assert order.total_cost == 200.0
+
+
+def test_order_zero_quantity_raises() -> None:
+    """Нельзя оформить заказ на товар с нулевым количеством."""
+    product = Product("Товар", "Описание", 100.0, 5)
+    product.quantity = 0
+
+    with pytest.raises(ZeroQuantityError):
+        Order("Заказ", product, 1)

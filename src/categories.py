@@ -3,6 +3,7 @@
 from typing import cast
 
 from src.base import BaseNamedEntity
+from src.exceptions import ZeroQuantityError
 from src.products import Product
 
 
@@ -42,14 +43,31 @@ class Category(BaseNamedEntity):
 
         Raises:
             TypeError: если добавляется не Product и не его наследник.
+            ZeroQuantityError: если у товара нулевое количество.
         """
         if not isinstance(product, Product):
             raise TypeError(
                 "В категорию можно добавлять только объекты класса Product "
                 "или его наследников"
             )
+        if product.quantity == 0:
+            raise ZeroQuantityError(
+                "Товар с нулевым количеством не может быть добавлен"
+            )
         self.__products.append(product)
         Category.product_count += 1
+
+    def average_price(self) -> float:
+        """Возвращает средний ценник всех товаров категории.
+
+        Returns:
+            Средняя цена товаров категории или 0, если товаров нет.
+        """
+        try:
+            prices_sum = sum(product.price for product in self.__products)
+            return prices_sum / len(self.__products)
+        except ZeroDivisionError:
+            return 0
 
     @property
     def products(self) -> str:

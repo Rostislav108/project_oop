@@ -4,6 +4,7 @@ import pytest
 
 from src.base import BaseNamedEntity
 from src.categories import Category, CategoryIterator
+from src.exceptions import ZeroQuantityError
 from src.products import Product, Smartphone
 
 
@@ -122,3 +123,27 @@ def test_add_product_rejects_non_product() -> None:
 def test_category_inherits_base_named_entity() -> None:
     """Категория наследует общий абстрактный класс BaseNamedEntity."""
     assert issubclass(Category, BaseNamedEntity)
+
+
+def test_average_price(products: list[Product]) -> None:
+    """Считает средний ценник всех товаров категории."""
+    category = Category("Смартфоны", "Описание", products)
+
+    assert category.average_price() == 195000.0
+
+
+def test_average_price_empty_category() -> None:
+    """Для категории без товаров средний ценник равен нулю."""
+    category = Category("Пустая", "Описание", [])
+
+    assert category.average_price() == 0
+
+
+def test_add_product_zero_quantity_raises() -> None:
+    """При добавлении товара с нулевым количеством — ZeroQuantityError."""
+    category = Category("Смартфоны", "Описание", [])
+    product = Product("Товар", "Описание", 100.0, 5)
+    product.quantity = 0
+
+    with pytest.raises(ZeroQuantityError):
+        category.add_product(product)

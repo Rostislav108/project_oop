@@ -20,7 +20,12 @@ class BaseProduct(ABC):
             description: описание товара.
             price: цена товара.
             quantity: количество товара в наличии.
+
+        Raises:
+            ValueError: если количество товара равно нулю.
         """
+        if quantity == 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен")
         self.name = name
         self.description = description
         self.__price = price

@@ -1,6 +1,7 @@
 """Модуль с классом Order (заказ)."""
 
 from src.base import BaseNamedEntity
+from src.exceptions import ZeroQuantityError
 from src.products import Product
 
 
@@ -19,7 +20,14 @@ class Order(BaseNamedEntity):
             name: название заказа.
             product: покупаемый товар.
             quantity: количество товара.
+
+        Raises:
+            ZeroQuantityError: если у товара нулевое количество.
         """
+        if product.quantity == 0:
+            raise ZeroQuantityError(
+                "Товар с нулевым количеством не может быть добавлен"
+            )
         super().__init__(name)
         self.product = product
         self.quantity = quantity

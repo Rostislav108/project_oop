@@ -146,3 +146,15 @@ def test_mixin_prints_on_create(capsys) -> None:
     captured = capsys.readouterr()
 
     assert "Product('Продукт1', 'Описание продукта', 1200, 10)" in captured.out
+
+
+def test_zero_quantity_raises() -> None:
+    """При нулевом количестве выбрасывается ValueError с сообщением."""
+    with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+        Product("Товар", "Описание", 100.0, 0)
+
+
+def test_zero_quantity_raises_for_subclasses() -> None:
+    """Наследники также проверяют нулевое количество."""
+    with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+        Smartphone("Смартфон", "Описание", 100.0, 0, 3.2, "S23", 256, "серый")
